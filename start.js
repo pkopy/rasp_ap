@@ -15,39 +15,42 @@ app.get('/', function(req, res) {
 
 app.get('/findwifi', function(req, res) {
     	const q = url.parse(req.url, true).query
+console.log(q)
 	if (q.ssid && q.pass) {
-		const network = `network={\n ssid=\"${q.ssid}\" \n psk=\"${q.pass}\"\n}`
-				fs.appendFile('/etc/wpa_supplicant/wpa_supplicant.conf', network, (err) => {
-					if (err) {
-						console.log(err)
-					} else {
-						console.log('Saved')
-						exec('sudo /usr/local/bin/wifistart.sh', (err) =>{
-							if (err) throw err
-						}) 
-					}
-				}) 
-		/*console.log(q.ssid + ' ' + q.pass)
-		exec('cp /home/pi/Desktop/AP/dhcpcd.conf /etc/', (err, stdout, stderr) => {
-			if (err) {
+        const network = `network={\n ssid=\"${q.ssid}\" \n psk=\"${q.pass}\"\n}`
+        exec('cp /home/pi/Desktop/AP/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf', (err) => {
+            if (err) {
 				console.log(err)
 			} else {
-				const network = `network={\n ssid=\"${q.ssid}\" \n psk=\"${q.pass}\"\n}`
-				fs.appendFile('/etc/wpa_supplicant/wpa_supplicant.conf', network, (err) => {
-					if (err) {
-						console.log(err)
-					} else {
-						console.log('Saved')
-						exec('reboot', (err, stdout, stderr)=>{
-							if(err) throw err
-						})
-					}
-				}) 
-				console.log('reboot')
-			}
-			
-		})*/
-	}
+                fs.appendFile('/etc/wpa_supplicant/wpa_supplicant.conf', network, (err) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        console.log('Saved')
+                        exec('sudo /usr/local/bin/wifistart.sh', (err) =>{
+                            if (err) {
+                                throw err
+                            } 
+                        }) 
+                    }
+                }) 
+            }
+        })
+		
+		
+	} else if (q.clear === '0') {
+console.log(q)
+        exec('cp /home/pi/Desktop/AP/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf', (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                exec('sudo systemctl restart dhcpcd.service', (err) =>{
+                    if (err) throw err
+                })
+            }
+        })
+        // console.log(q)
+    }
 	
     test()
         .then(data => {
@@ -61,4 +64,8 @@ app.get('/findwifi', function(req, res) {
         })
         .catch(err => console.log(err))
 })
-app.listen(9000);
+
+app.listen(8080)
+
+
+    

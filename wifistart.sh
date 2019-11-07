@@ -40,3 +40,4 @@ sleep 5
 echo "Starting dnsmasq service..."
 systemctl start dnsmasq.service
 echo "wifistart DONE"
+

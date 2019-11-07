@@ -8,6 +8,9 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import dotenv from 'dotenv'
+import SettingsIcon from '@material-ui/icons/Settings';
+import ReplayIcon from '@material-ui/icons/Replay';
+import Tooltip from '@material-ui/core/Tooltip';
 
 dotenv.config()
 const wifi = { name: 'kkkk', ssid: '664364374834838' }
@@ -18,44 +21,50 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        // marginRight: theme.spacing(1),
     },
     title: {
         flexGrow: 1,
     },
 }));
 function App() {
-const [listWifi, setWifiList] = React.useState([])
-React.useEffect(() => {
-    fetch(`http://${process.env.REACT_APP_API}:9000/findwifi`)
-        .then(data => data.json())
-        .then(data => {
-            // const wifi = data.split('\n')
-            setWifiList(data)
-            // console.log(wifi)
-        })
-},[])
-console.log(process.env.REACT_APP_PORT)
+    const [listWifi, setWifiList] = React.useState([])
+    // React.useEffect(() => {
+    //     console.log(window.location.hostname)
+
+    //     fetch(`http://${process.env.REACT_APP_API}:9000/findwifi`)
+    //         .then(data => data.json())
+    //         .then(data => {
+    //             // const wifi = data.split('\n')
+    //             setWifiList(data)
+    //             // console.log(wifi)
+    //         })
+    // },[])
+    // console.log(process.env.REACT_APP_PORT)
 
 
 
     const classes = useStyles();
 
     return (
-        <div 
-        className={classes.root}
-        >
+        <div className={classes.root}>
             <AppBar position="fixed">
-        <Toolbar>
-          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton> */}
-          <Typography variant="h6" className={classes.title}>
-            THBR WIFI Connector
-          </Typography>
-          {/* <Button color="inherit">Login</Button> */}
-        </Toolbar>
-      </AppBar>
+                <Toolbar>
+                    <Typography variant="h6" className={classes.title}>
+                        WIFI Connector
+                    </Typography>
+                    <Tooltip title="Reload">
+                        <IconButton className={classes.menuButton} color="inherit" aria-label="reload" onClick={() => window.location.reload()}>
+                            
+                            <ReplayIcon />
+                        </IconButton>
+
+                    </Tooltip>
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="settings" >
+                        <SettingsIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
 
             <Content
                 wifiList={listWifi}
